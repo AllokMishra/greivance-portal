@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Love's Grievance Diary 💌</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to bottom right, #ffe4e6, #fad0c4);
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .love-note::before {
+      content: "💬 ";
+    }
+    .cheesy-header::after {
+      content: " — Speak, my Queen. Your Knight is listening. 👑";
+      display: block;
+      font-size: 0.875rem;
+      color: #ff6b81;
+      margin-top: 0.2rem;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-center items-center p-4">
+  <div class="bg-white shadow-2xl rounded-3xl w-full max-w-2xl p-8 border-2 border-pink-300">
+    <h2 class="text-3xl font-extrabold text-center text-pink-600 mb-2 cheesy-header">
+      My Love's Grievance Diary 💖
+    </h2>
+    <p class="text-center text-sm text-gray-500 italic mb-6">
+      “Every sigh of yours matters more to me than the stars in the sky.” 🌙
+    </p>
+
+    <div class="max-h-96 overflow-y-auto border border-pink-200 rounded-xl p-4 bg-pink-50 mb-6 space-y-3">
+      {% for g in grievances %}
+      <div class="love-note">
+        <div class="bg-pink-100 text-gray-800 px-4 py-2 rounded-xl w-fit max-w-md shadow">
+          {{ g[1] }}
+        </div>
+        <p class="text-xs text-right text-gray-500">{{ g[2] }}</p>
+      </div>
+      {% endfor %}
+    </div>
+
+    <form method="POST" action="/submit" class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-3">
+      <input type="text" name="message" placeholder="Pour your heart out, my QUEEN 💌..." required
+             class="flex-grow px-4 py-3 rounded-full border-2 border-pink-300 focus:outline-none focus:ring-2 focus:ring-pink-400 shadow-inner bg-white">
+      <button type="submit" class="bg-pink-500 text-white px-8 py-3 rounded-full hover:bg-pink-600 transition shadow">
+        Send 💘
+      </button>
+    </form>
+
+    {% if love_note %}
+  <div class="mt-6 text-center text-pink-600 italic bg-pink-100 border border-pink-300 rounded-lg px-4 py-3">
+    {{ love_note }}
+  </div>
+{% endif %}
+
+    <p class="text-center text-xs text-gray-400 mt-6 italic">
+      No matter how upset you are... my ears and heart are always open. 🫶
+    </p>
+  </div>
+</body>
+</html>
