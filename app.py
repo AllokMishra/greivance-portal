@@ -2,9 +2,14 @@ from flask import Flask, render_template, request, redirect, session
 import sqlite3
 import random
 from datetime import datetime
+import requests
 
 app = Flask(__name__)
-app.secret_key = 'super_secret_key'
+app.secret_key = 'super_secret_key'  # change if you want
+
+# Your Telegram bot token and chat ID
+TELEGRAM_BOT_TOKEN = "8109824078:AAGAraEYqlRLdGmHNqX2yjB-LTKbnCksJvg"
+TELEGRAM_CHAT_ID = "5116463638"  # Your Telegram user chat ID
 
 # Sweet messages to comfort her 💌
 messages = [
@@ -31,6 +36,20 @@ def init_db():
 
 init_db()
 
+def send_telegram_message(text):
+    try:
+        url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+        payload = {
+            "chat_id": TELEGRAM_CHAT_ID,
+            "text": text
+        }
+        response = requests.post(url, json=payload)
+        print("Telegram Response:", response.text)
+        return response.status_code == 200
+    except Exception as e:
+        print("Telegram Error:", e)
+        return False
+
 @app.route("/")
 def index():
     with sqlite3.connect("grievance.db") as conn:
@@ -48,6 +67,10 @@ def submit():
             conn.execute("INSERT INTO grievances (message, created_at) VALUES (?, ?)",
                          (message, datetime.now().strftime('%Y-%m-%d %H:%M:%S')))
         session['love_note'] = random.choice(messages)
+
+        # Send Telegram alert with grievance message
+        send_telegram_message(f"New grievance from my love 💌:\n\n{message}")
+
     return redirect("/")
 
 @app.route("/admin")
